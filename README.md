@@ -92,6 +92,8 @@ Earlier, our WPScan had also revealed that there was an outdated theme installed
 
 Knowing this, let's look at the ```Appearance -> Editor``` tab.
 
+![404phptemplate](https://user-images.githubusercontent.com/45502375/155830042-8ae883b8-40af-4ae7-85e4-2876488844c5.png)
+
 We find that there's PHP templates included. These are webpages that will automatically load during certain situations. For example, the ```404.php``` template will show up whenever a requested resource is not found.
 
 However, this also means that the code in these templates can be replaced with any other PHP code, and if these webpages are opened, then the new code will execute instead.
@@ -103,4 +105,27 @@ Kali Linux includes a few very good PHP Reverse Shell scripts, and we will be us
 We'll find the absolute path for our pre-included scripts by using ```locate php-re``` and use the script that is in the ```webshells``` directory.
 
 ![locate_php-re](https://user-images.githubusercontent.com/45502375/155829992-df6b094c-0f1f-4f1e-98a3-b579a589b763.png)
+
+We will then replace the code in the ```404.php``` template with the code from our ```php-reverse-shell.php``` script.
+
+![404phptemplate_replaced](https://user-images.githubusercontent.com/45502375/155830102-1068b9f0-644f-4ad0-87ef-43d8dec5ea5b.png)
+
+We will also change the ```$ip``` and ```$port``` values to ones of our host machine so that we can receive the connection from the reverse shell.
+
+![ipandport](https://user-images.githubusercontent.com/45502375/155830155-3d8e5e14-4e52-4b30-b9d3-c46db090d9d2.png)
+
+Let's test to see if this worked.
+
+First we start a NetCat listener using ```nc -lvvp 5555```...
+
+![nc1](https://user-images.githubusercontent.com/45502375/155830240-7a03203b-02a2-43ef-a580-8e8824b9a278.png)
+
+...then we request a nonexistent resource...
+
+![thispagedoesnotexist](https://user-images.githubusercontent.com/45502375/155830247-885f0ef9-2897-4a13-99d8-c26176ea9e9e.png)
+
+...and we're in.
+
+![nc2](https://user-images.githubusercontent.com/45502375/155830258-825f522c-a92e-4cec-be83-973f4aae38e5.png)
+
 
