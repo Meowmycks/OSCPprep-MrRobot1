@@ -1,4 +1,4 @@
-# *Mr-Robot: 1* VulnHub CTF
+# *Mr-Robot: 1* Boot2Root CTF
 
 ## Objective
 
