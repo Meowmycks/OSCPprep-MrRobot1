@@ -128,4 +128,79 @@ First we start a NetCat listener using ```nc -lvvp 5555```...
 
 ![nc2](https://user-images.githubusercontent.com/45502375/155830258-825f522c-a92e-4cec-be83-973f4aae38e5.png)
 
+Now that we have a shell, we'll "upgrade" it to a semi-tty shell by using the command ```python -c 'import pty; pty.spawn("/bin/bash")'```
 
+![pythontty](https://user-images.githubusercontent.com/45502375/155830345-864192cd-e7f5-4e3c-bb7d-4d2b3e36765c.png)
+
+We see that we are logged in as ```daemon```, and we start looking around the machine for stuff.
+
+Here, we've found that there's another account named ```robot```, and in its home folder is the second key and a file called ```password.raw-md5```.
+
+![lsandcdintorobot](https://user-images.githubusercontent.com/45502375/155830405-805162cc-5510-4db0-880d-6fce9aaa9ebc.png)
+
+Let's try to open them both.
+
+We can't print the second key, but we *can* print the password file. Doing so gives us an MD5 hash, unsurprisingly.
+
+![catkey_catpassword](https://user-images.githubusercontent.com/45502375/155830460-f136fc32-730c-476d-9410-4a5087da8dbc.png)
+
+We can throw this hash into Hashcat and crack it quickly using the RockYou wordlist.
+
+![hashcat](https://user-images.githubusercontent.com/45502375/155830695-42cd5920-4077-4892-ad8a-462c7926a6a9.png)
+
+The password is revealed to be the very long, secure, and complicated string of ```abcdefghijklmnopqrstuvwxyz```.
+
+So now we have the credentials of ```robot : abcdefghijklmnopqrstuvwxyz```, and we can use ```su robot``` to switch to his account and reveal our second key.
+
+![key2of3](https://user-images.githubusercontent.com/45502375/155830834-8ffe951f-c68c-4a9e-9ce9-20eade092ed3.png)
+
+## Getting Key 3 of 3
+
+We first went from a Service User account to a Regular User account. Now, we'll have to go from a Regular User account to a Super User account.
+
+However, we can't use ```sudo```, meaning we can't just use the ```sudo su``` command.
+
+![nosudo](https://user-images.githubusercontent.com/45502375/155830925-b508da40-2661-4150-aa17-e2acecdeda80.png)
+
+So if we can't do things as root, then we'll try to find other files that *can* run as root.
+
+To do so, we'll use the command ```find / -perm -u=s -type f 2>/dev/null``` to find files that have root privileges.
+
+![findrootfiles](https://user-images.githubusercontent.com/45502375/155831039-5f717606-316c-4c04-afad-e13c67b1f586.png)
+
+We find the program ```nmap``` here, so we will check what version it is.
+
+![nmapversion](https://user-images.githubusercontent.com/45502375/155831065-539abc94-619f-457f-b0ca-646d7d4efefa.png)
+
+The version is 3.81. This version of Nmap supported an option called “interactive.” With this option, users were able to execute shell commands by using an nmap “shell” (interactive shell). Therefore, we will search for ways to exploit this shell.
+
+By searching online for exploits for Nmap version 3.81, we find that there are several results for a privilege escalation exploit. This is exactly what we need to be able to obtain root and get the final key.
+
+![searchforexploits](https://user-images.githubusercontent.com/45502375/155831335-c38582cf-a2b2-4dcf-a83e-4520b9421a18.png)
+
+The first result shows us the commands necessary to execute the privilege escalation exploit.
+
+![privilegeescalation](https://user-images.githubusercontent.com/45502375/155831602-a46340b3-46ea-4a5b-9a47-eddffb63c719.png)
+
+- First we enter Nmap's interactive mode using ```nmap --interactive```.
+- Then we create a file in the user's folder using ```!touch x```.
+- After this, we use the command ```find x -exec /bin/sh \;```.
+- Now we are root, and we can verify this by seeing the ```#``` prompt, and by using ```whoami```.
+
+![gainingroot](https://user-images.githubusercontent.com/45502375/155831613-c6b74060-e81d-43d2-8c99-905e82699e44.png)
+
+After that, it's as simple as searching through the ```root``` folder and finding the last key.
+
+![key3of3](https://user-images.githubusercontent.com/45502375/155831652-a6500628-2423-47ab-9899-d2eba7e38f20.png)
+
+## Notes
+
+This challenge took several hours to complete, and I couldn't have done it alone. 
+
+Not only did I come out of this learning new skills and fortifying existing ones, I also learned that sometimes it's okay to ask for help. 
+
+It's certainly much better than sitting stuck on one step forever.
+
+The box was not too difficult except for two points where I had figure out how to create the PHP Reverse Shell and how to exploit the Nmap program.
+
+Regardless, this was a really cool learning experience and I am eager to try other challenges.
