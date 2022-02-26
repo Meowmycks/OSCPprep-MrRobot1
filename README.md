@@ -1,4 +1,4 @@
-# VulnHub-MrRobot
+# *Mr-Robot: 1* VulnHub CTF
 
 ## Objective
 
