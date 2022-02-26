@@ -51,3 +51,56 @@ We find some interesting files to look at, one of them being our first key.
 Step 1 is done.
 
 ## Getting Key 2 of 3
+
+We also saw a file called ```fsocity.dic``` in the ```robots.txt``` list. We'll download it now.
+
+![fsocitydic](https://user-images.githubusercontent.com/45502375/155829014-76d994a6-50f6-4c0a-8b2e-ac8633dc91f6.png)
+
+My first instinct when downloading the file was to try looking through it for the second key, but it's just a wordlist with loads of duplicates.
+
+![cat_fsocitydic](https://user-images.githubusercontent.com/45502375/155829048-314a062c-6a3d-44af-aa71-b784642df5b5.png)
+
+After using ```sort -u fsocity.dic > filtered.dic``` to clean up the wordlist and checking it again, it looks much better.
+
+![sort_and_cat_filtered](https://user-images.githubusercontent.com/45502375/155829144-a4b332d6-607f-4256-8786-37582c9dde1f.png)
+
+The next thing I thought to do was to try and login to the Wordpress page, figuring that this wordlist would help me do that.
+
+I tried using the username ```admin```, ```administrator```, and similar usernames hoping to find a username enumeration exploit.
+
+![wplogin_admin](https://user-images.githubusercontent.com/45502375/155829349-a86bf3fe-7d4d-4c50-abf1-856202c6cd1d.png)
+
+I eventually tried using the name of the main character of the TV series that this box was based on, ```elliot```. This successfully revealed that ```elliot``` was an account registered with this Wordpress site.
+
+![wplogin_elliot](https://user-images.githubusercontent.com/45502375/155829355-bf5381e1-fe84-4ee7-ab8f-5eec62b81ecc.png)
+
+Now that we had a valid username, we could start dictionary-attacking the account with our ```filtered.dic``` wordlist.
+
+We'll employ the use of WPScan for this, allowing us to enumerate through a password list to brute-force the ```wp-login.php``` page and obtain credentials.
+
+Using ```sudo wpscan --url http://192.168.118.129/wp-login.php -U "elliot" -P filtered.dic```, we eventually got the password to access Elliot's account.
+
+![wpscan_bruteforce](https://user-images.githubusercontent.com/45502375/155829452-b6ae3460-a1fd-4511-b3f8-302698e7450c.png)
+
+We now had the credentials ```elliot : ER28-0652``` and could now login to the Wordpress site.
+
+![wordpress_dashboard](https://user-images.githubusercontent.com/45502375/155829708-f7a30fac-44dd-4771-bf54-a49f268fb70b.png)
+
+Earlier, our WPScan had also revealed that there was an outdated theme installed as well.
+
+![wpscan_theme](https://user-images.githubusercontent.com/45502375/155829779-0599a7c8-3e63-47c6-a43b-f8235c2d66cc.png)
+
+Knowing this, let's look at the ```Appearance -> Editor``` tab.
+
+We find that there's PHP templates included. These are webpages that will automatically load during certain situations. For example, the ```404.php``` template will show up whenever a requested resource is not found.
+
+However, this also means that the code in these templates can be replaced with any other PHP code, and if these webpages are opened, then the new code will execute instead.
+
+Therefore, we will replace the code in the ```404.php``` file with code to execute a PHP Reverse Shell. We place it in the ```404.php``` template because we can easily execute the code by just going to any nonexistent resource.
+
+Kali Linux includes a few very good PHP Reverse Shell scripts, and we will be using one of those.
+
+We'll find the absolute path for our pre-included scripts by using ```locate php-re``` and use the script that is in the ```webshells``` directory.
+
+![locate_php-re](https://user-images.githubusercontent.com/45502375/155829992-df6b094c-0f1f-4f1e-98a3-b579a589b763.png)
+
