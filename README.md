@@ -4,6 +4,8 @@
 
 > This VM has three keys hidden in different locations. Your goal is to find all three. Each key is progressively difficult to find.
 
+## Beginning the Challenge
+
 We'll download the VM from [here](https://www.vulnhub.com/entry/mr-robot-1,151/) and set it up with VMWare Workstation 16 Player.
 
 Upon starting the VM, we're greeted with an aesthetically pleasing login prompt.
