@@ -184,7 +184,7 @@ The first result shows us the commands necessary to execute the privilege escala
 
 - First we enter Nmap's interactive mode using ```nmap --interactive```.
 - Then we create a file in the user's folder using ```!touch x```.
-- After this, we use the command ```find x -exec /bin/sh \;```.
+- After this, we use the command ```!find x -exec /bin/sh \;```.
 - Now we are root, and we can verify this by seeing the ```#``` prompt, and by using ```whoami```.
 
 ![gainingroot](https://user-images.githubusercontent.com/45502375/155831613-c6b74060-e81d-43d2-8c99-905e82699e44.png)
