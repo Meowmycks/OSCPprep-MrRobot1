@@ -197,9 +197,7 @@ After that, it's as simple as searching through the ```root``` folder and findin
 
 This challenge took several hours to complete, and I couldn't have done it alone. 
 
-Not only did I come out of this learning new skills and fortifying existing ones, I also learned that sometimes it's okay to ask for help. 
-
-It's certainly much better than sitting stuck on one step forever.
+Not only did I come out of this learning new skills and fortifying existing ones, I also learned that sometimes it's okay to ask for help. (It's certainly much better than sitting stuck on one step forever.)
 
 The box was not too difficult except for two points where I had figure out how to create the PHP Reverse Shell and how to exploit the Nmap program.
 
