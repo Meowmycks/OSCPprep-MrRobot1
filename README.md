@@ -1,4 +1,4 @@
-# Boot2Root CTF - *Mr-Robot: 1*
+# *Boot2Root CTF* - Mr-Robot: 1
 
 ## Objective
 
