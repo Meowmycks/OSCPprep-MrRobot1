@@ -204,5 +204,3 @@ Not only did I come out of this learning new skills and fortifying existing ones
 The box was not too difficult except for two points where I had figure out how to create the PHP Reverse Shell and how to exploit the Nmap program.
 
 Regardless, this was a really cool learning experience and I am eager to try other challenges.
-
-[here](https://www.vulnhub.com/entry/napping-101,752/)
