@@ -1,4 +1,4 @@
-# Boot2Root CTF: *OSCP - Mr-Robot: 1*
+# OSCP Prep - *Mr-Robot: 1*
 
 ## Objective
 
